@@ -1,24 +1,42 @@
-#!/usr/bin/env python
-#
-# Copyright 2007 Google Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+
+
 import webapp2
+from caesar import encrypt
+
+# html
+page_header = """
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Caesar Cipher</title>
+</head>
+
+<body>
+	<h2>Caesar Cipher</h2>
+	<form action "/rotate" method="post">
+		<textarea name = "text" style = "height: 100px; width: 400px;">{0}</textarea>
+		<br>
+		<label>Pick a Number
+		<input name = "num">
+		</label>
+		<input type ="submit">
+	</form>
+</body>
+<html>
+"""
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        self.response.write('Hello world!')
+        self.response.write(page_header)
+
+    def post(self):
+    	text = self.request.get("text")
+    	num = int(self.request.get("num"))
+
+    	answer = encrypt(text, num)
+
+    	self.response.out.write(page_header.format(answer))
+    	
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler)
